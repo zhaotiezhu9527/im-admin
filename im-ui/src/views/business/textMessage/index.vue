@@ -122,10 +122,10 @@
 </template>
 
 <script>
-import { listText, getText, delText, addText, updateText } from "@/api/business/text";
+import { listText, getText, delText, addText, updateText } from "@/api/business/textMessage";
 
 export default {
-  name: "Text",
+  name: "textMessage",
   data() {
     return {
       // 遮罩层
