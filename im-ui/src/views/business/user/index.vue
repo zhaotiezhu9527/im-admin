@@ -1,13 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="平台账号" prop="userName">
+        <el-input v-model="queryParams.userName" placeholder="请输入平台账号" />
+      </el-form-item>
+      <el-form-item label="IM账号" prop="imUserName">
+        <el-input v-model="queryParams.imUserName" placeholder="请输入IM账号" />
+      </el-form-item>
       <el-form-item label="注册时间" prop="registerTime">
-        <el-date-picker clearable
-          v-model="queryParams.registerTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择注册时间">
-        </el-date-picker>
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 340px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -26,7 +36,7 @@
           v-hasPermi="['business:user:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -36,7 +46,7 @@
           @click="handleUpdate"
           v-hasPermi="['business:user:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -64,23 +74,44 @@
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="用户状态(1:正常 0:冻结)" align="center" prop="status" />
-      <el-table-column label="注册时间" align="center" prop="registerTime" width="180">
+      <el-table-column label="平台账号" align="center" prop="userName" />
+      <el-table-column label="IM账号" align="center" prop="imUserName" />
+      <el-table-column label="用户状态" align="center" prop="status" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.registerTime, '{y}-{m}-{d}') }}</span>
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>  
+      </el-table-column>
+      <el-table-column align="center" prop="registerTime" width="180">
+
+        <template slot="header">
+          <div>注册时间</div>
+          <div>上次登陆时间</div>
+        </template>
+        <template slot-scope="scope">
+          <div>{{ scope.row.registerTime }}</div>
+          <div>{{ scope.row.lastTime }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="注册Ip" align="center" prop="registerIp" />
-      <el-table-column label="上次登录时间" align="center" prop="lastTime" width="180">
+      <el-table-column align="center" prop="registerIp" width="180">
+        <template slot="header">
+          <div>注册IP</div>
+          <div>上次登陆IP</div>
+        </template>
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.lastTime, '{y}-{m}-{d}') }}</span>
+          <div><el-link type="primary" href="https://www.ip138.com/iplookup.php?ip=113.29.250.156&action=2">{{ scope.row.registerIp }}</el-link></div>
+          <div><el-link type="success" href="https://www.ip138.com/iplookup.php?ip=113.29.250.156&action=2">{{ scope.row.lastIp }}</el-link></div>
         </template>
       </el-table-column>
-      <el-table-column label="上次登录IP" align="center" prop="lastIp" />
       <el-table-column label="最后修改时间" align="center" prop="modifyTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.modifyTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.modifyTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -114,41 +145,11 @@
     <!-- 添加或修改用户列表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户名" />
+        <el-form-item label="平台账号" prop="userName">
+          <el-input v-model="form.userName" :disabled="true" placeholder="请输入平台账号" />
         </el-form-item>
         <el-form-item label="登录密码" prop="loginPwd">
-          <el-input v-model="form.loginPwd" placeholder="请输入登录密码" />
-        </el-form-item>
-        <el-form-item label="注册时间" prop="registerTime">
-          <el-date-picker clearable
-            v-model="form.registerTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择注册时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="注册Ip" prop="registerIp">
-          <el-input v-model="form.registerIp" placeholder="请输入注册Ip" />
-        </el-form-item>
-        <el-form-item label="上次登录时间" prop="lastTime">
-          <el-date-picker clearable
-            v-model="form.lastTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择上次登录时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="上次登录IP" prop="lastIp">
-          <el-input v-model="form.lastIp" placeholder="请输入上次登录IP" />
-        </el-form-item>
-        <el-form-item label="最后修改时间" prop="modifyTime">
-          <el-date-picker clearable
-            v-model="form.modifyTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择最后修改时间">
-          </el-date-picker>
+          <el-input v-model="form.loginPwd" placeholder="不输入表示不修改" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -196,9 +197,38 @@ export default {
       // 表单校验
       rules: {
         userName: [
-          { required: true, message: "用户名不能为空", trigger: "blur" }
+          { required: true, message: "平台账号不能为空", trigger: "blur" }
         ],
-      }
+      },
+      pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+      },
+      // 时间
+      dateRange:[],
     };
   },
   created() {
@@ -208,7 +238,7 @@ export default {
     /** 查询用户列表列表 */
     getList() {
       this.loading = true;
-      listUser(this.queryParams).then(response => {
+      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.userList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -224,15 +254,7 @@ export default {
       this.form = {
         id: null,
         userName: null,
-        nickName: null,
         loginPwd: null,
-        status: null,
-        registerTime: null,
-        registerIp: null,
-        lastTime: null,
-        lastIp: null,
-        modifyTime: null,
-        imToken: null
       };
       this.resetForm("form");
     },
@@ -263,9 +285,11 @@ export default {
       this.reset();
       const id = row.id || this.ids
       getUser(id).then(response => {
-        this.form = response.data;
+        this.form.userName = response.data.userName;
+        this.form.id = response.data.id;
+        this.form.loginPwd = ''
         this.open = true;
-        this.title = "修改用户列表";
+        this.title = "修改用户";
       });
     },
     /** 提交按钮 */
@@ -303,7 +327,18 @@ export default {
       this.download('business/user/export', {
         ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 修改冻结状态
+    changeStatus(id,status){
+      updateUser(
+        {
+          id: id,
+          status : status
+        }
+      ).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
   }
 };
 </script>
