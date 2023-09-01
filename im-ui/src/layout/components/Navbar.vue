@@ -61,7 +61,6 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
-import { getNotice } from "@/api/menu";
 
 export default {
   components: {
@@ -112,18 +111,6 @@ export default {
         })
       }).catch(() => {});
     },
-    getNotice(){
-      getNotice().then(response => {
-        if(response.data){
-            this.$refs.mp3.play()
-        }
-      });
-    }
-  },
-  created() {
-    setInterval(() => {
-      this.getNotice();
-    },13000)
   },
 }
 </script>

@@ -7,10 +7,3 @@ export const getRouters = () => {
     method: 'get'
   })
 }
-
-export const getNotice = () => {
-  return request({
-    url: '/business/withdraw/getNotice',
-    method: 'get'
-  })
-}

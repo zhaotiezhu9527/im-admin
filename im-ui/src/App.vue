@@ -7,21 +7,10 @@
 
 <script>
 import ThemePicker from "@/components/ThemePicker";
-import { getNotice } from "@/api/menu";
 export default {
   name: "App",
   components: { ThemePicker },
-  created() {
-    // setInterval(() => {
-    //   this.getNotice();
-    // },10000)
-  },
   methods:{
-    getNotice(){
-      getNotice().then(response => {
-        // this.$modal.msgSuccess("修改成功");
-      });
-    }
   },
     metaInfo() {
         return {
