@@ -5,15 +5,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	
     <groupId>com.juhai</groupId>
-    <artifactId>yuenan</artifactId>
+    <artifactId>im</artifactId>
     <version>3.8.5</version>
 
-    <name>yuenan</name>
+    <name>im</name>
     <url>http://www.ruoyi.vip</url>
     <description>后台管理系统</description>
     
     <properties>
-        <yuenan.version>3.8.5</yuenan.version>
+        <im.version>3.8.5</im.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -139,43 +139,43 @@
             <!-- 定时任务-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-quartz</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-quartz</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-generator</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-generator</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-framework</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-framework</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-system</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-system</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-common</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-common</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
                 <groupId>com.juhai</groupId>
-                <artifactId>yuenan-business</artifactId>
-                <version>${yuenan.version}</version>
+                <artifactId>im-business</artifactId>
+                <version>${im.version}</version>
             </dependency>
 
             <dependency>
@@ -198,13 +198,13 @@
     </dependencyManagement>
 
     <modules>
-        <module>yuenan-admin</module>
-        <module>yuenan-framework</module>
-        <module>yuenan-system</module>
-        <module>yuenan-quartz</module>
-        <module>yuenan-generator</module>
-        <module>yuenan-common</module>
-        <module>yuenan-business</module>
+        <module>im-admin</module>
+        <module>im-framework</module>
+        <module>im-system</module>
+        <module>im-quartz</module>
+        <module>im-generator</module>
+        <module>im-common</module>
+        <module>im-business</module>
     </modules>
     <packaging>pom</packaging>
 
