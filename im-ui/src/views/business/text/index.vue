@@ -18,7 +18,7 @@
           v-hasPermi="['business:text:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -28,7 +28,7 @@
           @click="handleUpdate"
           v-hasPermi="['business:text:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -57,7 +57,18 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="状态(0:启用 1:禁用)" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            @change="changeStatus(scope.row.id,scope.row.status)"
+            :active-value="0"
+            :inactive-value="1"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </template>    
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -89,9 +100,9 @@
     <!-- 添加或修改文本列表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="code代码" prop="code">
+        <!-- <el-form-item label="code代码" prop="code">
           <el-input v-model="form.code" placeholder="请输入code代码" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -251,7 +262,18 @@ export default {
       this.download('business/text/export', {
         ...this.queryParams
       }, `text_${new Date().getTime()}.xlsx`)
-    }
+    },
+    // 修改状态
+    changeStatus(id,status){
+      updateText(
+        {
+          id: id,
+          status : status
+        }
+      ).then(response => {
+        this.$modal.msgSuccess("修改成功");
+      });
+    },
   }
 };
 </script>

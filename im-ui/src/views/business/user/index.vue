@@ -105,8 +105,8 @@
           <div>上次登陆IP</div>
         </template>
         <template slot-scope="scope">
-          <div><el-link type="primary" href="https://www.ip138.com/iplookup.php?ip=113.29.250.156&action=2">{{ scope.row.registerIp }}</el-link></div>
-          <div><el-link type="success" href="https://www.ip138.com/iplookup.php?ip=113.29.250.156&action=2">{{ scope.row.lastIp }}</el-link></div>
+          <div><el-link type="primary" :href="'https://www.ip138.com/iplookup.php?ip=' + scope.row.registerIp + '&action=2'" target="_blank">{{ scope.row.registerIp }}</el-link></div>
+          <div><el-link type="success" :href="'https://www.ip138.com/iplookup.php?ip=' + scope.row.lastIp + '&action=2'" target="_blank">{{ scope.row.lastIp }}</el-link></div>
         </template>
       </el-table-column>
       <el-table-column label="最后修改时间" align="center" prop="modifyTime" width="180">
