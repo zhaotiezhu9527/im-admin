@@ -91,4 +91,4 @@ spring:
               end-point: oss-ap-southeast-1.aliyuncs.com
               bucket-name: juhaijituan
               domain: https://juhaijituan.oss-ap-southeast-1.aliyuncs.com/
-              base-path: yuenan/
+              base-path: im/
