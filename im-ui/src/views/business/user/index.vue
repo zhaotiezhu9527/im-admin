@@ -4,9 +4,9 @@
       <el-form-item label="平台账号" prop="userName">
         <el-input v-model="queryParams.userName" placeholder="请输入平台账号" />
       </el-form-item>
-      <el-form-item label="IM账号" prop="imUserName">
+      <!-- <el-form-item label="IM账号" prop="imUserName">
         <el-input v-model="queryParams.imUserName" placeholder="请输入IM账号" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="注册时间" prop="registerTime">
         <el-date-picker
           v-model="dateRange"
@@ -75,7 +75,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户ID" align="center" prop="id" />
       <el-table-column label="平台账号" align="center" prop="userName" />
-      <el-table-column label="IM账号" align="center" prop="imUserName" />
+      <!-- <el-table-column label="IM账号" align="center" prop="imUserName" /> -->
       <el-table-column label="用户状态" align="center" prop="status" >
         <template slot-scope="scope">
           <el-switch
@@ -114,6 +114,7 @@
           <span>{{ scope.row.modifyTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -150,6 +151,9 @@
         </el-form-item>
         <el-form-item label="登录密码" prop="loginPwd">
           <el-input v-model="form.loginPwd" placeholder="不输入表示不修改" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,7 +197,12 @@ export default {
         registerTime: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        // userName: "",//用户名
+        // remark: "",//备注
+        // loginPwd: "",//密码
+        // id: "",//id
+      },
       // 表单校验
       rules: {
         userName: [
@@ -285,11 +294,13 @@ export default {
       this.reset();
       const id = row.id || this.ids
       getUser(id).then(response => {
-        this.form.userName = response.data.userName;
-        this.form.id = response.data.id;
+        // this.form.userName = response.data.userName;
+        // this.form.remark = response.data.remark;
+        // this.form.id = response.data.id;
+        this.form = response.data;
         this.form.loginPwd = ''
-        this.open = true;
         this.title = "修改用户";
+        this.open = true;
       });
     },
     /** 提交按钮 */
@@ -297,7 +308,14 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateUser(this.form).then(response => {
+            updateUser(
+              {
+                id: this.form.id,
+                userName: this.form.userName,
+                loginPwd: this.form.loginPwd,
+                remark: this.form.remark,
+              }
+              ).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
