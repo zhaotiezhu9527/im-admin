@@ -62,6 +62,18 @@ public class User extends BaseEntity
 
     private String imUserName;
 
+    private String remark;
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String getImUserName() {
         return imUserName;
     }

@@ -17,10 +17,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="modifyTime"    column="modify_time"    />
         <result property="imToken"    column="im_token"    />
         <result property="imUserName"    column="im_user_name"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectUserVo">
-        select id, user_name, nick_name, login_pwd, status, register_time, register_ip, last_time, last_ip, modify_time, im_token,im_user_name from t_user
+        select id, user_name, remark, nick_name, login_pwd, status, register_time, register_ip, last_time, last_ip, modify_time, im_token,im_user_name from t_user
     </sql>
 
     <select id="selectUserList" parameterType="User" resultMap="UserResult">
@@ -52,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastIp != null">last_ip,</if>
             <if test="modifyTime != null">modify_time,</if>
             <if test="imToken != null">im_token,</if>
+            <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">#{userName},</if>
@@ -64,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastIp != null">#{lastIp},</if>
             <if test="modifyTime != null">#{modifyTime},</if>
             <if test="imToken != null">#{imToken},</if>
+            <if test="remark != null">#{remark},</if>
          </trim>
     </insert>
 
@@ -79,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastTime != null">last_time = #{lastTime},</if>
             <if test="lastIp != null">last_ip = #{lastIp},</if>
             <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
             <!-- <if test="imToken != null">im_token = #{imToken},</if> -->
         </trim>
         where id = #{id}
